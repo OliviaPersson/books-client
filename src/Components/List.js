@@ -37,7 +37,10 @@ export default class List extends React.Component {
                   read: readVal,
                 },
               ],
-            })
+            }),
+            () => {
+                localStorage.setItem("books", JSON.stringify(this.state.books));
+            }
           );
         }
     };
@@ -50,10 +53,22 @@ export default class List extends React.Component {
               books: booksArr.filter((book, bookIndex) => {
                 return bookIndex !== index;
               }),
+            },
+            () => {
+                localStorage.setItem("books", JSON.stringify(this.state.books));
             }
           );
         }
     };
+
+    saveLocal = () => {
+        localStorage.setItem("books", JSON.stringify(this.state.books));
+    };
+
+    componentDidMount() {
+        const books = localStorage.getItem("books");
+        if (books) this.setState({ books: JSON.parse(books) });
+    }
 
     render() {
         let books = this.state.books;
@@ -110,6 +125,7 @@ export default class List extends React.Component {
                                         item.read === "Yes"
                                             ? (item.read = "No")
                                             : (item.read = "Yes");
+                                        this.saveLocal();    
                                         this.forceUpdate();
                                     }}
                                 >
